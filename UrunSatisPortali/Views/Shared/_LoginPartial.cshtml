@@ -1,0 +1,22 @@
+@using UrunSatisPortali.Models
+
+<ul class="navbar-nav">
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-white" asp-controller="Home" asp-action="Index" title="Manage">Merhaba @User.Identity.Name!</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-controller="Access" asp-action="Logout">Çıkış Yap</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" id="register" asp-controller="Access" asp-action="Register">Kayıt Ol</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" id="login" asp-controller="Access" asp-action="Login">Giriş Yap</a>
+        </li>
+    }
+</ul>

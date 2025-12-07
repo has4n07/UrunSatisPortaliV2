@@ -1,0 +1,45 @@
+﻿@model IEnumerable<UrunSatisPortali.Models.Urun>
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Mağazamıza Hoş Geldiniz</h1>
+    <p>En yeni ürünler aşağıdadır.</p>
+</div>
+
+<hr />
+
+<div class="row">
+    @foreach (var urun in Model)
+    {
+        
+        var resimYolu = "/assets/images/no-image.png";
+        if (urun.UrunResimleri != null && urun.UrunResimleri.Any())
+        {
+            resimYolu = urun.UrunResimleri.First().ResimYolu;
+        }
+
+    <div class="col">
+        <div class="card rounded-0 product-card">
+                <a asp-controller="Home" asp-action="Detay" asp-route-id="@urun.Id">
+                    <img src="@resimYolu" class="card-img-top" alt="@urun.Ad" style="height: 200px; object-fit: contain;">
+                </a>
+          
+                 <div class="card-body">
+                    <h5 class="card-title">@urun.Ad</h5>
+                    <p class="card-text">@urun.Aciklama</p>
+                      <p class="card-text">
+                        <strong>Kategori:</strong> @urun.Kategori.Ad
+                    </p>
+                    <h4 class="card-text text-primary">
+                        @urun.Fiyat.ToString("c", new System.Globalization.CultureInfo("tr-TR"))
+                    </h4>
+                    <p class="card-text"><small class="text-muted">Stok: @urun.Stok</small></p>
+
+                    <a asp-controller="Home" asp-action="Detay" asp-route-id="@urun.Id" class="btn btn-primary">Detaylar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,38 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using UrunSatisPortali.Models 
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var kullaniciAdi = user?.AdSoyad ?? user?.Email; // AdSoyad yoksa Email kullan
+    var profilResmi = user?.ProfilResmiYolu ?? "/img/default-avatar.png";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+        <li class="nav-item dropdown">
+            <a class="dropdown-item" href="/Identity/Account/Manage" title="Profili Yönet">
+                <img src="@profilResmi" alt="Avatar" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                Merhaba, @kullaniciAdi!
+            </a>
+        </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>
