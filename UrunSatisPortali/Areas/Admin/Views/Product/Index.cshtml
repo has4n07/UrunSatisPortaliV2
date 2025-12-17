@@ -1,0 +1,40 @@
+@model List<Product>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800 fw-bold" style="font-family: 'Playfair Display', serif;">Ürünler</h1>
+            <p class="text-muted small">Ürünleri buradan yönetebilirsiniz.</p>
+        </div>
+        <div>
+            <a asp-controller="Product" asp-action="Upsert" class="btn btn-black shadow-sm">
+                <i class="bi bi-plus-lg me-1"></i> Yeni Ürün
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="tblData" class="table table-hover align-middle mb-0" style="width:100%">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase small fw-bold text-muted border-0 rounded-start">Ürün
+                                Adı</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Fiyat</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Stok</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Kategori</th>
+                            <th class="pe-4 py-3 text-uppercase small fw-bold text-muted text-end border-0 rounded-end">
+                                İşlemler</th>
+                        </tr>
+                    </thead>
+                    <!-- Body populated by DataTables (product.js) -->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/product.js" asp-append-version="true"></script>
+}

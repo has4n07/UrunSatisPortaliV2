@@ -9,7 +9,7 @@ namespace UrunSatisPortali.Models
         public required string Email { get; set; }
 
         [Required(ErrorMessage = "Ad Soyad alanı zorunludur")]
-        public required string AdSoyad { get; set; }
+        public required string NameSurname { get; set; }
 
         [Required(ErrorMessage = "Şifre alanı zorunludur")]
         [DataType(DataType.Password)]

@@ -1,0 +1,37 @@
+@model UrunSatisPortali.ViewModels.RoleViewModel
+
+@{
+    ViewData["Title"] = "Rol Düzenle";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-lg mt-4">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0 text-white font-playfair fs-5"><i class="bi bi-pencil-square me-2"></i>Rol Düzenle</h5>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">Rol Adı</label>
+                        <input asp-for="Name" class="form-control rounded-0" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-0 px-4">İptal</a>
+                        <button type="submit" class="btn btn-dark rounded-0 px-4">Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

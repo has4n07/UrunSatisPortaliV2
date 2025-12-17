@@ -1,0 +1,62 @@
+@model List<Category>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800 fw-bold" style="font-family: 'Playfair Display', serif;">Kategoriler</h1>
+            <p class="text-muted small">Kategorileri buradan yönetebilirsiniz.</p>
+        </div>
+        <div>
+            <a asp-controller="Category" asp-action="Create" class="btn btn-black shadow-sm">
+                <i class="bi bi-plus-lg me-1"></i> Yeni Kategori
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase small fw-bold text-muted border-0 rounded-start">
+                                Kategori Adı</th>
+                            <th class="pe-4 py-3 text-uppercase small fw-bold text-muted text-end border-0 rounded-end"
+                                style="width: 200px;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <span class="fw-medium text-dark">@obj.Name</span>
+                                </td>
+                                <td class="pe-4 py-3 text-end">
+                                    <div class="btn-group gap-2">
+                                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id"
+                                            class="btn btn-sm btn-outline-dark rounded-2" data-bs-toggle="tooltip"
+                                            title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id"
+                                            class="btn btn-sm btn-outline-danger rounded-2" data-bs-toggle="tooltip"
+                                            title="Sil">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (!Model.Any())
+            {
+                <div class="text-center p-5">
+                    <p class="text-muted mb-0">Henüz hiç kategori eklenmemiş.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

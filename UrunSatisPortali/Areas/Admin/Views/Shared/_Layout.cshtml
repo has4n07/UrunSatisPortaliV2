@@ -2,103 +2,261 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-    <meta name="author" content="Admin">
-    <meta name="keywords"
-        content="bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Paneli</title>
+    <!-- Use main site CSS for consistency (Bootstrap + Inter font) -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/UrunSatisPortali.styles.css" asp-append-version="true" />
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="~/admin/img/icons/icon-48x48.png" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
 
-    <title>@ViewData["Title"] - Admin Panel</title>
-
-    <link href="~/admin/css/app.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <!-- Plugins -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+
+    <style>
+        /* Admin Specific Overrides */
+        body {
+            background-color: #f8f9fa;
+            /* Light gray background for content area */
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar-wrapper {
+            min-width: 260px;
+            max-width: 260px;
+            background-color: #000;
+            /* Black Sidebar */
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        #sidebar-wrapper .sidebar-brand {
+            padding: 1.5rem 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-nav {
+            padding-top: 1rem;
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .sidebar-nav li a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav li a:hover,
+        .sidebar-nav li a.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 28px;
+            /* Slight movement on hover */
+        }
+
+        .sidebar-nav li a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-header {
+            padding: 1rem 1.5rem 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+        }
+
+        #page-content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .admin-navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="sidebar js-sidebar">
-            <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="#">
-                    <span class="align-middle">Admin Paneli</span>
-                </a>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <a class="sidebar-brand" href="@Url.Action("Index", "Home", new { area = "Admin" })">
+                HASAN ESMER
+            </a>
+            <ul class="sidebar-nav">
+                <li class="sidebar-header">Yönetim Paneli</li>
 
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header">
-                        Yönetim
-                    </li>
+                <li>
+                    <a href="@Url.Action("Index", "Home", new { area = "Admin" })">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Category", new { area = "Admin" })">
+                        <i class="bi bi-tags"></i> Kategoriler
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Product", new { area = "Admin" })">
+                        <i class="bi bi-box-seam"></i> Ürünler
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Order", new { area = "Admin" })">
+                        <i class="bi bi-truck"></i> Siparişler
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Role", new { area = "Admin" })">
+                        <i class="bi bi-shield-lock"></i> Roller & Yetkiler
+                    </a>
+                </li>
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Home", new { area = "" })">
-                            <i class="align-middle" data-feather="home"></i> <span class="align-middle">Anasayfaya
-                                Dön</span>
-                        </a>
-                    </li>
+                <li class="sidebar-header mt-4">Site</li>
+                <li>
+                    <a href="@Url.Action("Index", "Home", new { area = "" })">
+                        <i class="bi bi-house-door"></i> Siteye Dön
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Kategori", new { area = "Admin" })">
-                            <i class="align-middle" data-feather="list"></i> <span
-                                class="align-middle">Kategoriler</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Urun", new { area = "Admin" })">
-                            <i class="align-middle" data-feather="shopping-bag"></i> <span
-                                class="align-middle">Ürünler</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="main">
-            <nav class="navbar navbar-expand navbar-light navbar-bg">
-                <a class="sidebar-toggle js-sidebar-toggle">
-                    <i class="hamburger align-self-center"></i>
-                </a>
-
-                <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav navbar-align">
-                        <li class="nav-item dropdown">
-                            <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
-                                data-bs-toggle="dropdown">
-                                <i class="align-middle" data-feather="settings"></i>
-                            </a>
-
-                            <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
-                                data-bs-toggle="dropdown">
-                                <span class="text-dark">Admin</span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">Log out</a>
-                            </div>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light admin-navbar justify-content-end">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-2"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                        <li><a class="dropdown-item" href="#">Profil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
                         </li>
+                        <li><a class="dropdown-item text-danger" asp-area="" asp-controller="Access"
+                                asp-action="Logout">Çıkış Yap</a></li>
                     </ul>
                 </div>
             </nav>
 
-            <main class="content">
-                <div class="container-fluid p-0">
-                    <partial name="_Notification" />
-                    @RenderBody()
-                </div>
-            </main>
+            <div class="container-fluid py-4 px-4">
+                @await Html.PartialAsync("_Notification")
+                @RenderBody()
+            </div>
         </div>
     </div>
 
-    <script src="~/admin/js/app.js"></script>
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="//cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Use Global SignalR or customized per page
+        var connection = new signalR.HubConnectionBuilder().withUrl("/orderHub").build();
+
+        connection.on("ReceiveOrderNotification", function () {
+            // 1. Show Toast Notification
+            toastr.success('Yeni bir sipariş geldi!');
+
+            // 2. Refresh Dashboard Stats & Chart via AJAX
+            $.ajax({
+                url: '/Admin/Home/GetDashboardStats',
+                type: 'GET',
+                success: function (data) {
+                    // Update Text Values with Animation
+                    animateValue("totalOrdersValue", data.totalOrders);
+                    animateValue("totalRevenueValue", data.totalRevenue, true); // true for currency formatting
+
+                    // Update Chart Data
+                    if (window.myLineChart) {
+                        window.myLineChart.data.datasets[0].data = data.chartData;
+                        window.myLineChart.update();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching dashboard stats:", error);
+                }
+            });
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        // Helper function for number animation
+        function animateValue(id, newValue, isCurrency = false) {
+            var obj = document.getElementById(id);
+            if (!obj) return;
+
+            // Simple update for now, can be enhanced with counting animation
+            if (isCurrency) {
+                // Format as currency ₺
+                obj.innerHTML = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(newValue);
+            } else {
+                obj.innerHTML = newValue;
+            }
+
+            // Visual cue
+            obj.classList.add('text-success'); // Flash green
+            setTimeout(() => { obj.classList.remove('text-success'); }, 1000);
+        }
+    </script>
+
     @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>

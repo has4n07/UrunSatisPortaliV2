@@ -1,59 +1,136 @@
 @model UrunSatisPortali.ViewModels.ProfileViewModel
 
-@{
-    ViewData["Title"] = "Profilim";
-}
-
-<div class="container mt-5">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Profil Bilgileri</h3>
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        @if (!string.IsNullOrEmpty(Model.CurrentProfilePhotoPath))
-                        {
-                            <img src="@Model.CurrentProfilePhotoPath" class="rounded-circle img-thumbnail"
-                                style="width: 150px; height: 150px; object-fit: cover;" alt="Profil Fotoğrafı" />
-                        }
-                        else
-                        {
-                            <img src="/images/default-user.png" class="rounded-circle img-thumbnail"
-                                style="width: 150px; height: 150px; object-fit: cover;" alt="Varsayılan Profil Fotoğrafı" />
-                        }
+        <div class="col-lg-8">
+
+            <h2 class="text-center mb-5" style="font-family: 'Playfair Display', serif; font-weight: 700;">Profil
+                Bilgilerim</h2>
+
+            <div class="bg-white p-4 p-md-5 border" style="box-shadow: 0 2px 15px rgba(0,0,0,0.03);">
+                <form asp-action="Profile" method="post" enctype="multipart/form-data">
+
+                    <!-- Profile Photo Section -->
+                    <div class="d-flex flex-column align-items-center mb-5">
+                        <div class="position-relative mb-3">
+                            @if (!string.IsNullOrEmpty(Model.CurrentProfilePhotoPath))
+                            {
+                                <img src="@Model.CurrentProfilePhotoPath" class="rounded-circle object-fit-cover border"
+                                    width="150" height="150" alt="Profil Resmi" style="border-color: #eee !important;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-secondary border"
+                                    style="width: 150px; height: 150px;">
+                                    <i class="bi bi-person fs-1"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="text-center">
+                            <label class="btn btn-outline-dark btn-sm rounded-0">
+                                <i class="bi bi-camera me-2"></i>Fotoğrafı Değiştir
+                                <input asp-for="ProfilePhoto" type="file" accept="image/*" hidden
+                                    onchange="document.getElementById('file-name').textContent = this.files[0].name" />
+                            </label>
+                            <div class="mt-2 text-muted small" id="file-name"></div>
+                        </div>
                     </div>
 
-                    <form asp-action="Profile" enctype="multipart/form-data" method="post">
-                        <div class="mb-3">
-                            <label asp-for="AdSoyad" class="form-label"></label>
-                            <input asp-for="AdSoyad" class="form-control" />
-                            <span asp-validation-for="AdSoyad" class="text-danger"></span>
+                    <!-- Form Fields -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label asp-for="NameSurname"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">AD
+                                SOYAD</label>
+                            <input asp-for="NameSurname" class="form-control rounded-0 p-3" placeholder="Ad Soyad"
+                                style="background-color: #fcfcfc; border-color: #eee;" />
+                            <span asp-validation-for="NameSurname" class="text-danger small"></span>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" readonly />
-                            <small class="text-muted">Email adresi değiştirilemez.</small>
+                        <div class="col-md-6">
+                            <label asp-for="Email"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">E-POSTA
+                                (DEĞİŞTİRİLEMEZ)</label>
+                            <input asp-for="Email" class="form-control rounded-0 p-3 text-muted" readonly
+                                style="background-color: #f8f9fa; border-color: #eee;" />
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="ProfilePhoto" class="form-label"></label>
-                            <input asp-for="ProfilePhoto" class="form-control" type="file" accept="image/*" />
-                            <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">TELEFON
+                                NUMARASI</label>
+                            <input asp-for="PhoneNumber" class="form-control rounded-0 p-3"
+                                placeholder="Telefon Numarası" style="background-color: #fcfcfc; border-color: #eee;" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Kaydet</button>
-                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
+                        <div class="col-md-6">
+                            <label asp-for="Gender"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">CİNSİYET</label>
+                            <select asp-for="Gender" class="form-select rounded-0 p-3"
+                                style="background-color: #fcfcfc; border-color: #eee;">
+                                <option value="">Seçiniz</option>
+                                <option value="Erkek">Erkek</option>
+                                <option value="Kadın">Kadın</option>
+                                <option value="Belirtmek İstemiyorum">Belirtmek İstemiyorum</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="col-12">
+                            <label asp-for="BirthDate"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">DOĞUM
+                                TARİHİ</label>
+                            <input asp-for="BirthDate" type="date" class="form-control rounded-0 p-3"
+                                style="background-color: #fcfcfc; border-color: #eee;" />
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Address"
+                                class="form-label fw-bold small text-muted text-uppercase tracking-wide">ADRES</label>
+                            <textarea asp-for="Address" class="form-control rounded-0 p-3" rows="3" placeholder="Adres"
+                                style="background-color: #fcfcfc; border-color: #eee;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5">
+                        <a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted small">
+                            <i class="bi bi-arrow-left me-1"></i> Mağazaya Dön
+                        </a>
+                        <button type="submit" class="btn btn-black px-5 py-3 rounded-0 fw-bold hover-lift">
+                            KAYDET
+                        </button>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .tracking-wide {
+        letter-spacing: 1px;
+    }
+
+    .btn-black {
+        background: black;
+        color: white;
+        transition: all 0.2s;
+    }
+
+    .btn-black:hover {
+        background: #333;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .form-control:focus {
+        border-color: black;
+        box-shadow: none;
+        background-color: white !important;
+    }
+</style>
 
 @section Scripts {
     @{

@@ -5,57 +5,163 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kayıt Ol - UrunSatisPortali</title>
+    <title>Kayıt Ol | HASAN ESMER</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap & Custom CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            background: white;
+            /* Minimal shadow or no shadow for cleaner look */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eee;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: black;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .brand-logo:hover {
+            color: black;
+        }
+
+        .form-control {
+            border-radius: 0;
+            border: 1px solid #ddd;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: black;
+        }
+
+        .btn-black {
+            background-color: black;
+            color: white;
+            border-radius: 0;
+            padding: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .auth-footer a {
+            color: black;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #333;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white text-center">
-                        <h3>Kayıt Ol</h3>
-                    </div>
-                    <div class="card-body">
-                        <form asp-action="Register" method="post">
-                            <div class="mb-3">
-                                <label asp-for="AdSoyad" class="form-label">Ad Soyad</label>
-                                <input asp-for="AdSoyad" class="form-control" placeholder="Ad Soyad" />
-                                <span asp-validation-for="AdSoyad" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Email" class="form-label">Email Adresi</label>
-                                <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="Password" class="form-label">Şifre</label>
-                                <input asp-for="Password" class="form-control" placeholder="******" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="ConfirmPassword" class="form-label">Şifre Tekrar</label>
-                                <input asp-for="ConfirmPassword" class="form-control" placeholder="******" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100">Kayıt Ol</button>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <p>Zaten hesabınız var mı? <a asp-action="Login">Giriş Yap</a></p>
-                        <a asp-controller="Home" asp-action="Index">Ana Sayfaya Dön</a>
-                    </div>
-                </div>
+
+<body>
+
+    <div class="auth-container">
+        <a href="/" class="brand-logo">HASAN ESMER</a>
+
+        <h2 class="section-title">Hesap Oluştur</h2>
+
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
+
+            <div class="mb-3">
+                <label asp-for="NameSurname" class="form-label">AD SOYAD</label>
+                <input asp-for="NameSurname" class="form-control" placeholder="Ad Soyad" />
+                <span asp-validation-for="NameSurname" class="text-danger small"></span>
             </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">E-POSTA</label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="ornek@email.com" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">ŞİFRE</label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="******" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ConfirmPassword" class="form-label">ŞİFRE TEKRAR</label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="******" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-black w-100">KAYIT OL</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Zaten bir hesabınız var mı? <a asp-action="Login">Giriş Yap</a></p>
+            <p class="mt-2"><a asp-controller="Home" asp-action="Index">Mağazaya Dön</a></p>
         </div>
     </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await Component.InvokeAsync("Notyf")
 </body>
+
 </html>

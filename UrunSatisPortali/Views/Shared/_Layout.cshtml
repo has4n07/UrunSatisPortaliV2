@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="utf-8" />
@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/UrunSatisPortali.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:wght@700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
@@ -15,86 +20,118 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand text-white" asp-area="" asp-controller="Home"
-                    asp-action="Index">UrunSatisPortali</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black py-4">
+            <div class="container-fluid px-4 px-lg-5">
+                <!-- 1. Logo (Left) -->
+                <a class="navbar-brand fw-bold fs-3 text-uppercase" style="font-family: 'Playfair Display', serif;"
+                    asp-area="" asp-controller="Home" asp-action="Index">HASAN ESMER</a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Ana
-                                Sayfa</a>
-                        </li>
 
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- 2. Centered Links -->
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item px-2"><a class="nav-link text-uppercase small fw-bold" asp-controller="Home"
+                                asp-action="Index">Mağaza</a>
+                        </li>
+                        <li class="nav-item px-2"><a class="nav-link text-uppercase small fw-bold"
+                                href="/#about-section">Biz Kimiz?</a>
+                        </li>
+                        <li class="nav-item px-2"><a class="nav-link text-uppercase small fw-bold" asp-controller="Home"
+                                asp-action="Contact">İletişim</a>
+                        </li>
+                    </ul>
+
+                    <!-- 3. Right Icons (No Search) -->
+                    <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
                         @if (User.IsInRole("Admin"))
                         {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                                       data-bs-toggle="dropdown" aria-expanded="false">
-                                        Yönetim Paneli
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Kategori"
-                                                asp-action="Index">Kategoriler</a></li>
-                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Urun"
-                                                asp-action="Index">Ürünler</a></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                    </ul>
-                                </li>
+                            <li class="nav-item text-uppercase small">
+                                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Yönetim</a>
+                            </li>
                         }
-                    </ul>
-                    <ul class="navbar-nav">
+
                         @if (User.Identity.IsAuthenticated)
                         {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @{
-                                        var profilePhoto = User.FindFirst("ProfilePhotoPath")?.Value ?? "/images/default-user.png";
-                                        var displayName = User.Identity.Name; 
-                                    }
-                                            <img src="@profilePhoto" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" alt="Profile" />
-                                    @displayName
-                                        </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" asp-controller="Access" asp-action="Profile">Profilim</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-controller="Access" asp-action="Logout">Çıkış Yap</a></li>
-                                    </ul>
-                                </li>
-
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person fs-5"></i> <span class="d-lg-none ms-2">Hesabım</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-0">
+                                    <li><a class="dropdown-item small text-uppercase" asp-controller="Order"
+                                            asp-action="Index">Siparişlerim</a></li>
+                                    <li><a class="dropdown-item small text-uppercase" asp-controller="Access"
+                                            asp-action="Profile">Profilim</a></li>
+                                    <li><a class="dropdown-item small text-uppercase" asp-controller="Access"
+                                            asp-action="Logout">Çıkış
+                                            Yap</a></li>
+                                </ul>
+                            </li>
                         }
                         else
                         {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-white" asp-controller="Access" asp-action="Register">Kayıt Ol</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-white" asp-controller="Access" asp-action="Login">Giriş Yap</a>
-                                    </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Access" asp-action="Login">Giriş</a>
+                            </li>
                         }
+
+                        <li class="nav-item">
+                            @await Component.InvokeAsync("ShoppingCart")
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container-fluid px-0">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Black Footer -->
+    <footer class="bg-black text-white py-5 mt-5">
         <div class="container">
-            &copy; 2025 - UrunSatisPortali
+            <div class="row gy-4 justify-content-center text-center">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-3" style="font-family: 'Playfair Display', serif;">HASAN ESMER</h5>
+                    <p class="small text-white-50">Şık ve sade tasarımların tek adresi. Modern yaşam için minimal
+                        çözümler.</p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="text-white text-uppercase fw-bold mb-3">Mağaza</h6>
+                    <ul class="list-unstyled small text-white-50">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Yeni Gelenler</a></li>
+                        <li><a href="#best-sellers" class="text-white-50 text-decoration-none">Çok Satanlar</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">İndirim</a></li>
+                    </ul>
+                </div>
 
- </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white text-uppercase fw-bold mb-3">Sosyal Medya</h6>
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <a href="https://instagram.com" target="_blank" class="text-white fs-5"><i
+                                    class="bi bi-instagram"></i></a>
+                        </li>
+                        <li class="list-inline-item ms-3">
+                            <a href="https://github.com" target="_blank" class="text-white fs-5"><i
+                                    class="bi bi-github"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-5 pt-4 border-top border-secondary">
+                <p class="small text-white-50 mb-0">&copy; 2025 UrunSatisPortali. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -104,4 +141,5 @@
     @await Component.InvokeAsync("Notyf")
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

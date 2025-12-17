@@ -1,0 +1,62 @@
+@model Category
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="fw-bold m-0 text-danger" style="font-family: 'Playfair Display', serif;">Kategori Sil
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+                        <div>
+                            Bu kategoriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                        </div>
+                    </div>
+
+                    <form method="post" id="deleteForm">
+                        <input asp-for="Id" hidden />
+                        <div class="mb-3 form-floating">
+                            <input asp-for="Name" disabled class="form-control" />
+                            <label asp-for="Name">Kategori Adı</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between pt-3">
+                            <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-1"></i> İptal
+                            </a>
+                            <button type="button" class="btn btn-danger px-5" onclick="confirmDelete()">Sil</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu kategoriyi kalıcı olarak silmek üzeresiniz!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#000', // Black for primary action (even if destuctive, to match theme?) or Red? Let's keep red for Delete confirmation but Button allows trigger.
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Evet, Sil!',
+                cancelButtonText: 'İptal',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('deleteForm').submit();
+                }
+            })
+        }
+    </script>
+}

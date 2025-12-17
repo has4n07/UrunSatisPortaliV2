@@ -1,0 +1,137 @@
+@model ShoppingCartViewModel
+
+<form method="post">
+    <div class="container py-5 mt-5">
+        <!-- Page Title -->
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold" style="font-family: 'Playfair Display', serif;">SİPARİŞİ TAMAMLA</h2>
+        </div>
+
+        <div class="row gx-5">
+            <!-- Left Column: Shipping Information -->
+            <div class="col-lg-7 mb-5 mb-lg-0">
+                <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Teslimat Bilgileri</h4>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.Name" class="form-label text-muted small text-uppercase fw-bold">Ad
+                            Soyad</label>
+                        <input asp-for="OrderHeader.Name" class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.Name" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.PhoneNumber"
+                            class="form-label text-muted small text-uppercase fw-bold">Telefon</label>
+                        <input asp-for="OrderHeader.PhoneNumber"
+                            class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="OrderHeader.StreetAddress"
+                            class="form-label text-muted small text-uppercase fw-bold">Adres</label>
+                        <input asp-for="OrderHeader.StreetAddress"
+                            class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="OrderHeader.City"
+                            class="form-label text-muted small text-uppercase fw-bold">Şehir</label>
+                        <input asp-for="OrderHeader.City" class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.City" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="OrderHeader.State"
+                            class="form-label text-muted small text-uppercase fw-bold">Bölge / Eyalet</label>
+                        <input asp-for="OrderHeader.State"
+                            class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.State" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="OrderHeader.PostalCode"
+                            class="form-label text-muted small text-uppercase fw-bold">Posta Kodu</label>
+                        <input asp-for="OrderHeader.PostalCode"
+                            class="form-control form-control-lg rounded-0 custom-input" />
+                        <span asp-validation-for="OrderHeader.PostalCode" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-action="Index" class="text-secondary text-decoration-none small text-uppercase fw-bold"><i
+                            class="bi bi-arrow-left me-1"></i> Sepete Dön</a>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="col-lg-5">
+                <div class="bg-light p-5">
+                    <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Sipariş Özeti</h4>
+
+                    <ul class="list-unstyled mb-4">
+                        @foreach (var details in Model.ShoppingCartList)
+                        {
+                            <li
+                                class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-white">
+                                <div>
+                                    <h6 class="fw-bold mb-0">@details.Product.Name</h6>
+                                    <small class="text-muted">Adet: @details.Count</small>
+                                </div>
+                                <span class="fw-semibold">@((details.Product.Price * details.Count).ToString("c"))</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex justify-content-between mb-4 pb-4 border-bottom">
+                        <span class="text-muted text-uppercase small fw-bold">Toplam Tutar</span>
+                        <span class="fw-bold h4">@Model.OrderHeader.OrderTotal.ToString("c")</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <small class="text-muted d-block mb-1">Tahmini Teslimat:</small>
+                        <span class="fw-bold">@DateTime.Now.AddDays(7).ToShortDateString() -
+                            @DateTime.Now.AddDays(14).ToShortDateString()</span>
+                    </div>
+
+                    <button type="submit" value="Place Order"
+                        class="btn btn-black w-100 py-3 text-uppercase fw-bold rounded-0">
+                        Siparişi Tamamla
+                    </button>
+
+                    <div class="mt-3 text-center">
+                        <small class="text-muted" style="font-size: 0.7rem;">Sipariş vererek, kullanım koşullarımızı ve
+                            gizlilik politikamızı kabul etmiş olursunuz.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .custom-input {
+        border: 1px solid #ced4da;
+        background-color: transparent;
+        font-size: 0.9rem;
+    }
+
+    .custom-input:focus {
+        border-color: #000;
+        box-shadow: none;
+        background-color: #fff;
+    }
+
+    .btn-black {
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-black:hover {
+        background-color: #333;
+        color: #fff;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

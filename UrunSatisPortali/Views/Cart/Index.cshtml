@@ -1,0 +1,131 @@
+@model ShoppingCartViewModel
+
+<form method="post">
+    <div class="container py-5 mt-5">
+        <!-- Page Title -->
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold" style="font-family: 'Playfair Display', serif;">SEPETİM</h2>
+        </div>
+
+        <div class="row">
+            <!-- Left Column: Cart Items -->
+            <div class="col-lg-8">
+                @if (Model.ShoppingCartList.Count() > 0)
+                {
+                    <div class="d-none d-lg-block border-bottom pb-3 mb-3">
+                        <div class="row text-uppercase text-muted small fw-bold ls-1">
+                            <div class="col-6">Ürün</div>
+                            <div class="col-3 text-center">Miktar</div>
+                            <div class="col-3 text-end">Toplam</div>
+                        </div>
+                    </div>
+
+                    @foreach (var item in Model.ShoppingCartList)
+                    {
+                        <div class="row align-items-center mb-4 pb-4 border-bottom">
+                            <!-- Product Image & Info -->
+                            <div class="col-12 col-lg-6 d-flex align-items-center">
+                                <div class="flex-shrink-0" style="width: 100px;">
+                                    <img src="@item.Product.ImagePath" class="img-fluid" alt="@item.Product.Name">
+                                </div>
+                                <div class="ms-4">
+                                    <h5 class="fw-bold mb-1" style="font-family: 'Playfair Display', serif;">@item.Product.Name
+                                    </h5>
+                                    <p class="text-muted small mb-0">@item.Product.Price.ToString("c")</p>
+                                </div>
+                            </div>
+
+                            <!-- Quantity Controls -->
+                            <div class="col-6 col-lg-3 text-center mt-3 mt-lg-0">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a asp-action="Minus" asp-route-cartId="@item.Id" class="btn btn-link text-dark p-0">
+                                        <i class="bi bi-dash h4 mb-0"></i>
+                                    </a>
+                                    <span class="mx-3 fw-bold border px-3 py-1">@item.Count</span>
+                                    <a asp-action="Plus" asp-route-cartId="@item.Id" class="btn btn-link text-dark p-0">
+                                        <i class="bi bi-plus h4 mb-0"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Total Price & Remove -->
+                            <div class="col-6 col-lg-3 text-end mt-3 mt-lg-0">
+                                <h5 class="fw-bold mb-2">@((item.Product.Price * item.Count).ToString("c"))</h5>
+                                <a asp-action="Remove" asp-route-cartId="@item.Id"
+                                    class="text-danger small text-decoration-none text-uppercase fw-bold">
+                                    Kaldır
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x display-1 text-muted"></i>
+                        <p class="mt-3 lead">Sepetinizde ürün bulunmamaktadır.</p>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-black mt-3">Alışverişe Başla</a>
+                    </div>
+                }
+
+                <div class="mt-4">
+                    <a asp-controller="Home" asp-action="Index"
+                        class="text-secondary text-decoration-none small text-uppercase fw-bold"><i
+                            class="bi bi-arrow-left me-1"></i> Alışverişe Devam Et</a>
+                </div>
+            </div>
+
+            <!-- Right Column: Summary -->
+            <div class="col-lg-4 mt-5 mt-lg-0">
+                <div class="bg-light p-4">
+                    <h4 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Sipariş Özeti</h4>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Ara Toplam</span>
+                        <span class="fw-bold">@Model.OrderHeader.OrderTotal.ToString("c")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4 pb-4 border-bottom">
+                        <span class="text-muted">Kargo</span>
+                        <span class="text-success fw-bold">Ücretsiz</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold h5">Toplam</span>
+                        <span class="fw-bold h5">@Model.OrderHeader.OrderTotal.ToString("c")</span>
+                    </div>
+
+                    @if (Model.ShoppingCartList.Count() > 0)
+                    {
+                        <a asp-action="Summary" class="btn btn-black w-100 py-3 text-uppercase fw-bold rounded-0">
+                            Ödemeye Geç
+                        </a>
+                    }
+                    else
+                    {
+                        <button disabled class="btn btn-secondary w-100 py-3 text-uppercase fw-bold rounded-0">
+                            Ödemeye Geç
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .btn-black {
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-black:hover {
+        background-color: #333;
+        color: #fff;
+    }
+</style>

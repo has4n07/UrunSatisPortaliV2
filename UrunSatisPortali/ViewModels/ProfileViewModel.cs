@@ -6,7 +6,7 @@ namespace UrunSatisPortali.ViewModels
     {
         [Required(ErrorMessage = "Ad Soyad alanı zorunludur.")]
         [Display(Name = "Ad Soyad")]
-        public string AdSoyad { get; set; } = string.Empty;
+        public string NameSurname { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Email alanı zorunludur.")]
         [EmailAddress(ErrorMessage = "Geçerli bir email adresi giriniz.")]
@@ -17,5 +17,19 @@ namespace UrunSatisPortali.ViewModels
         public IFormFile? ProfilePhoto { get; set; }
 
         public string? CurrentProfilePhotoPath { get; set; }
+
+        [Display(Name = "Telefon Numarası")]
+        [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
+        public string? PhoneNumber { get; set; }
+
+        [Display(Name = "Adres")]
+        public string? Address { get; set; }
+
+        [Display(Name = "Doğum Tarihi")]
+        [DataType(DataType.Date)]
+        public DateTime? BirthDate { get; set; }
+
+        [Display(Name = "Cinsiyet")]
+        public string? Gender { get; set; }
     }
 }

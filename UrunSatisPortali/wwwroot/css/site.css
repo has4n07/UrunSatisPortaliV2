@@ -1,31 +1,124 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: 'Inter', sans-serif;
+  color: #000;
+  margin-bottom: 0;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from rows */
+  width: 100%;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+a {
+  text-decoration: none;
+  color: #000;
+  transition: color 0.2s ease;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+a:hover {
+  color: #555;
+}
+
+/* Navbar */
+.navbar-brand {
+  letter-spacing: -0.5px;
+}
+
+.nav-link {
+  color: #fff !important;
+  /* Changed to white */
+  letter-spacing: 0.5px;
+}
+
+.nav-link:hover {
+  color: #ccc !important;
+  /* Light gray on hover */
+  opacity: 1;
+}
+
+/* Minimalist Product Card - Fixed Alignment */
+.product-card {
+  border: none;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  width: 100%;
+  padding-top: 100%;
+  /* 1:1 Aspect Ratio (Square) - Reduces height as requested */
+}
+
+.product-image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badge */
+.badge-new {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #000;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  z-index: 20;
+}
+
+/* Product Info */
+.card-body {
+  padding: 1rem 0;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  font-size: 0.9rem;
+  color: #000;
+  font-weight: 400;
+  margin-top: auto;
+}
+
+/* About Section */
+.about-section {
+  background-color: #f9f9f9;
+}
+
+/* Footer */
+footer {
+  font-family: 'Inter', sans-serif;
+}
+
+footer h5,
+footer h6 {
+  letter-spacing: 0.5px;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ccc;
 }

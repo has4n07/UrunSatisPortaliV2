@@ -1,0 +1,48 @@
+@model int
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <!-- Icon -->
+            <div class="mb-4">
+                <i class="bi bi-check-circle text-dark" style="font-size: 5rem;"></i>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Teşekkürler</h1>
+            <h4 class="fw-light mb-5">Siparişiniz Başarıyla Alındı</h4>
+
+            <!-- Order Number Box -->
+            <div class="bg-light p-4 mb-5 d-inline-block" style="min-width: 300px;">
+                <p class="text-muted small text-uppercase fw-bold mb-1">Sipariş Numaranız</p>
+                <h2 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif;">#@Model</h2>
+            </div>
+
+            <!-- Context Text -->
+            <p class="text-muted mb-5">
+                Sipariş detaylarınız e-posta adresinize gönderilmiştir.<br>
+                Bizi tercih ettiğiniz için teşekkür ederiz.
+            </p>
+
+            <!-- Action Button -->
+            <a asp-controller="Home" asp-action="Index"
+                class="btn btn-black px-5 py-3 text-uppercase fw-bold rounded-0">
+                Alışverişe Devam Et
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-black {
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-black:hover {
+        background-color: #333;
+        color: #fff;
+    }
+</style>

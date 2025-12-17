@@ -1,16 +1,16 @@
 
 
+using Microsoft.AspNetCore.Identity;
+
 namespace UrunSatisPortali.Models
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string? UserName { get; set; }
-        public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public string? AdSoyad { get; set; }
+        public string? NameSurname { get; set; }
         public string Role { get; set; } = "User";
         public string? ProfilePhotoPath { get; set; }
+        public string? Address { get; set; }
+        public DateTime? BirthDate { get; set; }
+        public string? Gender { get; set; }
     }
 }

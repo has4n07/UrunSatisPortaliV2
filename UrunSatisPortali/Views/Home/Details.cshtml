@@ -1,44 +1,90 @@
-@model Urun
+@model ShoppingCart
 
-<form method="post">
-    <div class="card shadow border-0 mt-4 mb-4">
-        <div class="card-header bg-secondary bg-gradient text-light py-4">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Ad</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Kategori.Ad</p>
+<div class="container py-5 mt-5">
+    <form method="post">
+        <input asp-for="ProductId" hidden />
+        <div class="row gx-5">
+            <!-- Left Column: Image -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="product-image-large bg-light position-relative overflow-hidden">
+                    <img src="@Model.Product.ImagePath" class="img-fluid w-100 object-fit-cover"
+                        alt="@Model.Product.Name" style="min-height: 500px; max-height: 700px;">
                 </div>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="py-3">
-                <div class="row">
-                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.ResimYolu" width="100%" class="rounded" />
+
+            <!-- Right Column: Details -->
+            <div class="col-lg-6 d-flex flex-column justify-content-center">
+                <!-- Category -->
+                <p class="text-uppercase text-muted small fw-bold mb-2 ls-1">@Model.Product.Category.Name</p>
+
+                <!-- Title -->
+                <h1 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">@Model.Product.Name
+                </h1>
+
+                <!-- Price -->
+                <h3 class="fw-light mb-4 text-dark">@Model.Product.Price.ToString("c")</h3>
+
+                <!-- Description -->
+                <div class="description mb-5">
+                    <p class="lead text-secondary" style="font-size: 1rem; line-height: 1.8;">
+                        @Html.Raw(Model.Product.Description)</p>
+                </div>
+
+                <!-- Add to Cart Section -->
+                <div class="d-flex align-items-center mb-4">
+                    <!-- Quantity Input -->
+                    <div class="me-3" style="width: 100px;">
+                        <input asp-for="Count" type="number" value="1" min="1"
+                            class="form-control form-control-lg text-center border-dark rounded-0" />
                     </div>
-                    <div class="col-12 col-lg-6 offset-lg-1">
-                        <div class="col-12 col-md-6 pb-4">
-                            <span class="badge bg-info pt-2" style="height:30px;">@Model.Kategori.Ad</span>
-                        </div>
-                        <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50 ">Fiyat : @Model.Fiyat.ToString("c")</h6>
-                        </div>
-                        <div class="row ps-2">
-                            <p class="text-secondary lh-sm">@Html.Raw(Model.Aciklama)</p>
-                        </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-black btn-lg w-100 rounded-0 text-uppercase fw-bold py-3"
+                        style="font-size: 0.9rem;">
+                        Sepete Ekle
+                    </button>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="mt-4 border-top pt-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-truck me-2"></i> <small class="text-muted">Ücretsiz Kargo & İade</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-shield-check me-2"></i> <small class="text-muted">%100 Güvenli Ödeme</small>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="row">
-                <div class="col-12 col-md-6 pb-1">
-                    <a class="btn btn-success form-control " style="height:50px;" asp-action="Index">Listeye Dön</a>
-                </div>
-                <div class="col-12 col-md-6 pb-1">
-                    <button type="button" class="btn btn-primary form-control" style="height:50px;">Sepete Ekle (Yakında)</button>
+
+                <!-- Back Link -->
+                <div class="mt-5">
+                    <a asp-action="Index" class="text-secondary text-decoration-none small text-uppercase fw-bold"><i
+                            class="bi bi-arrow-left me-1"></i> Listeye Dön</a>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
+
+<style>
+    /* Local Styles for Details Page */
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .btn-black {
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-black:hover {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .form-control:focus {
+        border-color: #000;
+        box-shadow: none;
+    }
+</style>

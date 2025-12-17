@@ -1,0 +1,101 @@
+@model ProductViewModel
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="fw-bold m-0" style="font-family: 'Playfair Display', serif;">
+                        @(Model.Product.Id != 0 ? "Ürün Güncelle" : "Yeni Ürün Oluştur")
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        <input asp-for="Product.Id" hidden />
+                        <input asp-for="Product.ImagePath" hidden />
+
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="mb-3 form-floating">
+                                    <input asp-for="Product.Name" class="form-control" placeholder="Ürün Adı" />
+                                    <label asp-for="Product.Name">Ürün Adı</label>
+                                    <span asp-validation-for="Product.Name" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3 form-floating">
+                                    <textarea asp-for="Product.Description" class="form-control" placeholder="Açıklama"
+                                        style="height: 100px"></textarea>
+                                    <label asp-for="Product.Description">Açıklama</label>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Product.Price" class="form-control" placeholder="Fiyat" />
+                                            <label asp-for="Product.Price">Fiyat</label>
+                                            <span asp-validation-for="Product.Price" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Product.Stock" class="form-control" placeholder="Stok" />
+                                            <label asp-for="Product.Stock">Stok</label>
+                                            <span asp-validation-for="Product.Stock" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 form-floating">
+                                    <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList"
+                                        class="form-select">
+                                        <option disabled selected>--Kategori Seçin--</option>
+                                    </select>
+                                    <label asp-for="Product.CategoryId">Kategori</label>
+                                    <span asp-validation-for="Product.CategoryId" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small text-uppercase fw-bold">Ürün Resmi</label>
+                                    <input type="file" name="file" class="form-control" />
+                                </div>
+
+                                <div class="d-flex justify-content-between pt-3">
+                                    <a asp-controller="Product" asp-action="Index"
+                                        class="btn btn-outline-secondary px-4">
+                                        <i class="bi bi-arrow-left me-1"></i> Geri Dön
+                                    </a>
+                                    <button type="submit" class="btn btn-black px-5">
+                                        @(Model.Product.Id != 0 ? "Güncelle" : "Oluştur")
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                @if (!string.IsNullOrEmpty(Model.Product.ImagePath))
+                                {
+                                    <div class="p-2 border rounded bg-light">
+                                        <label class="d-block text-center text-muted small mb-2">Mevcut Resim</label>
+                                        <img src="@Model.Product.ImagePath" class="img-fluid rounded shadow-sm"
+                                            style="width: 100%; object-fit: cover;" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="p-5 border rounded bg-light text-center text-muted">
+                                        <i class="bi bi-image display-4"></i>
+                                        <p class="small mb-0">Resim Yok</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

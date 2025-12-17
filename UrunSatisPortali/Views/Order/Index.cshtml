@@ -1,0 +1,82 @@
+@model List<OrderHeader>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-0 fw-bold" style="font-family: 'Playfair Display', serif;">Siparişlerim</h1>
+            <p class="text-muted small">Geçmiş siparişlerinizi buradan takip edebilirsiniz.</p>
+        </div>
+        <div>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">Alışverişe Devam
+                Et</a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase small fw-bold text-muted border-0">Sipariş No</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Tarih</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Durum</th>
+                            <th class="py-3 text-uppercase small fw-bold text-muted border-0">Tutar</th>
+                            <th class="pe-4 py-3 text-uppercase small fw-bold text-muted border-0 text-end">Detay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold">#@item.Id</td>
+                                <td class="py-3">@item.OrderDate.ToShortDateString()</td>
+                                <td class="py-3">
+                                    @if (item.OrderStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark rounded-pill px-3">Beklemede</span>
+                                    }
+                                    else if (item.OrderStatus == "Approved")
+                                    {
+                                        <span class="badge bg-info text-white rounded-pill px-3">Onaylandı</span>
+                                    }
+                                    else if (item.OrderStatus == "Shipped")
+                                    {
+                                        <span class="badge bg-success rounded-pill px-3">Kargolandı</span>
+                                    }
+                                    else if (item.OrderStatus == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger rounded-pill px-3">İptal Edildi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary rounded-pill px-3">@item.OrderStatus</span>
+                                    }
+                                </td>
+                                <td class="py-3 fw-bold">@item.OrderTotal.ToString("c")</td>
+                                <td class="pe-4 py-3 text-end">
+                                    <a asp-action="Details" asp-route-orderId="@item.Id" class="btn btn-sm btn-black rounded-2">
+                                        İncele
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-bag-x display-1 text-muted opacity-50"></i>
+            </div>
+            <h3 class="fw-bold mb-3">Henüz Siparişiniz Yok</h3>
+            <p class="text-muted mb-4">Sipariş verdiğinizde burada listelenecektir.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-black rounded-pill px-5 py-2">Hemen Alışverişe
+                Başla</a>
+        </div>
+    }
+</div>

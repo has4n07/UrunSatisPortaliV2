@@ -11,14 +11,16 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using System.Security.Cryptography;
 using System.Text;
 
+using Microsoft.AspNetCore.Identity;
 using UrunSatisPortali.ViewModels;
 
 namespace UrunSatisPortali.Controllers
 {
-    public class AccessController(ApplicationDbContext context, INotyfService notyf, IWebHostEnvironment webHostEnvironment) : Controller
+    public class AccessController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, INotyfService notyf, IWebHostEnvironment webHostEnvironment) : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly INotyfService _notyf = notyf;
-        private readonly ApplicationDbContext _context = context;
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         [HttpGet]
@@ -36,23 +38,10 @@ namespace UrunSatisPortali.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _context.Users.FirstOrDefault(x => x.Email == model.Email);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
 
-                if (user != null && VerifyPassword(model.Password, user.PasswordHash))
+                if (result.Succeeded)
                 {
-                    var claims = new List<Claim>
-                    {
-                        new(ClaimTypes.Name, user.AdSoyad ?? user.Email ?? ""),
-                        new(ClaimTypes.NameIdentifier, user.Id),
-                        new(ClaimTypes.Role, user.Role),
-                        new("ProfilePhotoPath", user.ProfilePhotoPath ?? "/images/default-user.png")
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties();
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
                     _notyf.Success("Giriş Başarılı");
                     return RedirectToAction("Index", "Home");
                 }
@@ -79,160 +68,115 @@ namespace UrunSatisPortali.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userExists = _context.Users.Any(x => x.Email == model.Email);
-                if (userExists)
-                {
-                    _notyf.Error("Bu email adresi ile kayıtlı kullanıcı mevcut.");
-                    return View(model);
-                }
-
                 var user = new ApplicationUser
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    AdSoyad = model.AdSoyad,
-                    EmailConfirmed = true, // Auto confirm for manual reg
+                    NameSurname = model.NameSurname,
+                    EmailConfirmed = true,
                     Role = "User"
                 };
 
-                // Manual Password Hashing
-                user.PasswordHash = HashPassword(model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    _notyf.Success("Kayıt Başarılı. Giriş yapabilirsiniz.");
+                    return RedirectToAction("Index", "Home");
+                }
 
-                _notyf.Success("Kayıt Başarılı. Giriş yapabilirsiniz.");
-                return RedirectToAction("Login");
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                    _notyf.Error(error.Description);
+                }
             }
             return View(model);
         }
 
-        private static string HashPassword(string password)
-        {
-            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(bytes);
-        }
-
-        private static bool VerifyPassword(string password, string? hash)
-        {
-            if (string.IsNullOrEmpty(hash)) return false;
-            return HashPassword(password) == hash;
-        }
-
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
             _notyf.Success("Çıkış Yapıldı");
             return RedirectToAction("Login", "Access");
         }
 
         public IActionResult GoogleLogin()
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            var redirectUrl = Url.Action("GoogleResponse", "Access");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            return Challenge(properties, "Google");
         }
 
         public async Task<IActionResult> GoogleResponse()
         {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // If cookie auth failed, try to authenticate with the external cookie (Google sets this temporarily)
-            // Actually, in this flow, Google middleware should have handled the callback and signed in the user 
-            // to the scheme we asked for in Challenge? 
-            // Wait, usually we use an external cookie scheme for the intermediate step.
-            // But here we are using the same CookieAuthenticationDefaults.AuthenticationScheme?
-            // Let's check how AddGoogle works with AddCookie.
-            // Usually: .AddCookie() .AddGoogle()
-            // When Challenge(Google), it redirects to Google.
-            // On return, Google middleware validates and signs in the user. 
-            // BUT, if we want to do custom logic (like checking DB), we might need to inspect the principal.
-
-            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-            // Wait, Google handler usually signs in to the default scheme or specific scheme.
-            // Let's use a simpler approach: 
-            // We want to capture the user info returned by Google.
-
-            // Correct pattern often involves:
-            // 1. Challenge Google
-            // 2. Google redirects back to /signin-google (handled by middleware)
-            // 3. Middleware constructs principal and calls SignInAsync on the configured scheme (Cookies).
-
-            // HOWEVER, we want to check our DB.
-            // So we should probably use a separate scheme for external auth, OR hook into the events.
-            // OR, simpler: Let Google sign in, then in this Action (which is NOT the callback path, wait).
-            // The callback path is usually /signin-google.
-
-            // Ah, I set RedirectUri = Url.Action("GoogleResponse").
-            // So Google will redirect HERE after the middleware processes the return?
-            // No, the middleware handles the callback path.
-            // If we set RedirectUri to this action, the middleware will redirect HERE after it's done.
-            // So at this point, the user SHOULD be authenticated via the Cookie scheme if the middleware did its job.
-
-            // Let's verify.
-            var result2 = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (result2.Succeeded)
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
             {
-                // User is already signed in by Google middleware? 
-                // No, Google middleware creates a principal. It doesn't necessarily sign in to the app cookie unless configured.
-                // But we chained .AddGoogle() to .AddAuthentication().
+                _notyf.Error("Google girişi başarısız oldu.");
+                return RedirectToAction("Login");
+            }
 
-                // Let's look at the claims.
-                var claims = result2.Principal.Identities.FirstOrDefault()?.Claims;
-                var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
-                            ?? claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value; // Google often sends email as Name
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (result.Succeeded)
+            {
+                _notyf.Success("Google ile giriş yapıldı");
+                return RedirectToAction("Index", "Home");
+            }
 
-                if (email != null)
+            // If user does not have an account, create one
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+            if (email != null)
+            {
+                var user = new ApplicationUser
                 {
-                    var user = _context.Users.FirstOrDefault(x => x.Email == email);
-                    if (user == null)
-                    {
-                        // Auto-register
-                        user = new ApplicationUser
-                        {
-                            UserName = email,
-                            Email = email,
-                            AdSoyad = result2.Principal.FindFirst(ClaimTypes.Name)?.Value ?? email,
-                            EmailConfirmed = true,
-                            Role = "User"
-                        };
-                        _context.Users.Add(user);
-                        await _context.SaveChangesAsync();
-                    }
+                    UserName = email,
+                    Email = email,
+                    NameSurname = name,
+                    EmailConfirmed = true,
+                    Role = "User"
+                };
 
-                    // Now we ensure the user is logged in with OUR claims (Role, Id etc)
-                    var appClaims = new List<Claim>
-                    {
-                        new(ClaimTypes.Name, user.Email ?? ""),
-                        new(ClaimTypes.NameIdentifier, user.Id),
-                        new(ClaimTypes.Role, user.Role)
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties();
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-                    _notyf.Success($"Google ile giriş yapıldı: {user.Email}");
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    _notyf.Success("Google ile kayıt olundu ve giriş yapıldı");
                     return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    // If creation failed (maybe user exists but with different provider?), we can try to link?
+                    // Or maybe just show error.
+                    foreach (var err in createResult.Errors) _notyf.Error(err.Description);
                 }
             }
 
-            _notyf.Error("Google girişi başarısız oldu.");
+            _notyf.Error("Giriş işlemi tamamlanamadı.");
             return RedirectToAction("Login");
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _context.Users.Find(userId);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
             var model = new ProfileViewModel
             {
-                AdSoyad = user.AdSoyad ?? "",
+                NameSurname = user.NameSurname ?? "",
                 Email = user.Email ?? "",
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                BirthDate = user.BirthDate,
+                Gender = user.Gender,
                 CurrentProfilePhotoPath = user.ProfilePhotoPath
             };
             return View(model);
@@ -244,13 +188,14 @@ namespace UrunSatisPortali.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _context.Users.Find(userId);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            user.AdSoyad = model.AdSoyad;
-            // Email update logic can be complex (re-verification), so maybe skip or handle carefully. 
-            // For now, let's allow updating AdSoyad and Photo.
+            user.NameSurname = model.NameSurname;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Address = model.Address;
+            user.BirthDate = model.BirthDate;
+            user.Gender = model.Gender;
 
             if (model.ProfilePhoto != null)
             {
@@ -266,25 +211,16 @@ namespace UrunSatisPortali.Controllers
                 user.ProfilePhotoPath = "/images/profiles/" + uniqueFileName;
             }
 
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-
-            // Refresh Cookie to update Claims (Name, Photo)
-            var claims = new List<Claim>
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
-                new(ClaimTypes.Name, user.AdSoyad ?? user.Email ?? ""),
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Role, user.Role),
-                new("ProfilePhotoPath", user.ProfilePhotoPath ?? "/images/default-user.png")
-            };
+                await _signInManager.RefreshSignInAsync(user);
+                _notyf.Success("Profil güncellendi.");
+                return RedirectToAction("Profile");
+            }
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var authProperties = new AuthenticationProperties();
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-            _notyf.Success("Profil güncellendi.");
-            return RedirectToAction("Profile");
+            _notyf.Error("Profil güncellenemedi.");
+            return View(model);
         }
     }
 }

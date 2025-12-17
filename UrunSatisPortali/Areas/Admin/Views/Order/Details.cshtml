@@ -1,0 +1,133 @@
+@model OrderViewModel
+
+<form method="post">
+    <input asp-for="OrderHeader.Id" hidden />
+    <div class="container-fluid mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <!-- Header / Actions -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="mb-1 fw-bold" style="font-family: 'Playfair Display', serif;">Sipariş
+                            #@Model.OrderHeader.Id</h4>
+                        <span class="badge bg-light text-dark border">@Model.OrderHeader.OrderStatus</span>
+                        <span class="text-muted small ms-2">@Model.OrderHeader.OrderDate.ToShortDateString()</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i> Geri
+                        </a>
+
+                        @if (Model.OrderHeader.OrderStatus == "Pending")
+                        {
+                            <button type="submit" asp-action="UpdateOrderDetail" asp-route-orderId="@Model.OrderHeader.Id"
+                                asp-route-orderStatus="Approved" class="btn btn-black">Onayla</button>
+                        }
+                        @if (Model.OrderHeader.OrderStatus == "Approved")
+                        {
+                            <button type="submit" asp-action="UpdateOrderDetail" asp-route-orderId="@Model.OrderHeader.Id"
+                                asp-route-orderStatus="Shipped" class="btn btn-dark">Kargola</button>
+                        }
+                        @if (Model.OrderHeader.OrderStatus != "Cancelled" && Model.OrderHeader.OrderStatus != "Shipped")
+                        {
+                            <button type="submit" asp-action="UpdateOrderDetail" asp-route-orderId="@Model.OrderHeader.Id"
+                                asp-route-orderStatus="Cancelled" class="btn btn-outline-danger">İptal Et</button>
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Customer Details -->
+                    <div class="col-md-7 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-white border-bottom py-3">
+                                <h6 class="fw-bold m-0"><i class="bi bi-person me-2"></i>Müşteri Bilgileri</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.Name" readonly class="form-control bg-light"
+                                                placeholder="Ad Soyad" />
+                                            <label>Ad Soyad</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.PhoneNumber" readonly
+                                                class="form-control bg-light" placeholder="Telefon" />
+                                            <label>Telefon</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.StreetAddress" readonly
+                                                class="form-control bg-light" placeholder="Adres" />
+                                            <label>Adres</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.City" readonly class="form-control bg-light"
+                                                placeholder="Şehir" />
+                                            <label>Şehir</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.State" readonly class="form-control bg-light"
+                                                placeholder="Bölge" />
+                                            <label>Bölge</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-floating">
+                                            <input asp-for="OrderHeader.PostalCode" readonly
+                                                class="form-control bg-light" placeholder="Kod" />
+                                            <label>Posta Kodu</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="col-md-5 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-white border-bottom py-3">
+                                <h6 class="fw-bold m-0"><i class="bi bi-basket me-2"></i>Sipariş Özeti</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var detail in Model.OrderDetail)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                            <div>
+                                                <h6 class="my-0 small fw-bold">@detail.Product.Name</h6>
+                                                <small class="text-muted d-block">
+                                                    @detail.Count x @detail.Price.ToString("c")
+                                                </small>
+                                            </div>
+                                            <span class="text-dark fw-medium">@((detail.Count *
+                                            detail.Price).ToString("c"))</span>
+                                        </li>
+                                    }
+                                    <li
+                                        class="list-group-item d-flex justify-content-between align-items-center p-3 bg-light">
+                                        <span class="fw-bold">TOPLAM TUTAR</span>
+                                        <strong class="fs-5" style="font-family: 'Playfair Display', serif;">
+                                            @Model.OrderHeader.OrderTotal.ToString("c")
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
