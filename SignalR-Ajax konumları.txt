@@ -1,0 +1,9 @@
+
+SİGNALR ==> DASHBOARD TOPLAM SİPARİŞ GTRAFİK TOPLAM KAZANÇTA 
+ ==>/Hubs/orderhubs.cs
+ ==>Controllers/cartcontroller.cs  
+ ==> Areas/Admin/Views/Shared/_Layout.cshtml
+
+AJAX ===> ürün silme işlemi ajax 	
+==> wwwroot/js/product.js
+
